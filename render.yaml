@@ -1,0 +1,27 @@
+# Render Blueprint for the backend API (https://render.com/docs/blueprint-spec).
+# Secrets use sync: false, so Render asks for them in the dashboard and they never live in Git.
+services:
+  - type: web
+    name: project-management-api
+    runtime: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      # Render generates a random 256-bit value that nobody has to see or copy.
+      - key: JWT_SECRET
+        generateValue: true
+      # mysql://<app-user>:<password>@<aiven-host>:<port>/<database>?ssl=true
+      - key: DATABASE_URL
+        sync: false
+      # Exactly the deployed web origin, e.g. https://<your-app>.vercel.app (no trailing slash).
+      - key: CLIENT_ORIGIN
+        sync: false
+      # Aiven's CA certificate, uploaded as a Render Secret File named aiven-ca.pem.
+      - key: NODE_EXTRA_CA_CERTS
+        value: /etc/secrets/aiven-ca.pem

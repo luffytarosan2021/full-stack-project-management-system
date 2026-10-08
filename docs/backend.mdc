@@ -1,0 +1,27 @@
+---
+description: Backend (Express + Prisma + MySQL) rules for the Project Management System
+globs: backend/**
+alwaysApply: false
+---
+
+Follow `AGENTS.md` at the repo root, plus these backend specifics.
+
+Before writing any backend code, read these files and follow them exactly:
+- `docs/API.md` (contract)
+- `docs/VALIDATION.md` (validation)
+- `docs/SECURITY.md` (security)
+- `backend/prisma/schema.prisma` (database)
+
+Rules:
+- Implement only the phase the current prompt asks for. Do not touch other modules.
+- Never weaken authentication or ownership checks to make something work.
+- Never pass `req.body` to Prisma directly. Validate with Zod first.
+- Every project/task query filters by the authenticated user inside the Prisma query.
+- Use Prisma 7.10.0 with `@prisma/adapter-mariadb` and `mariadb`. Do not upgrade to Prisma 8 or downgrade to Prisma 6.
+- Use the folder structure from `AGENTS.md` (routes, controllers, services, validators, middleware, utils).
+- All errors go through the central error handler using the format in `docs/API.md`.
+- Prisma models and fields use the database's snake_case names (`users.full_name`, `projects.user_id`). Convert to camelCase only in `utils/serializers.js`. Generate IDs with `crypto.randomUUID()` (the schema has no `@default(uuid())`).
+- Every Prisma update of a project or task (or user) must explicitly set `updated_at: new Date()`. The schema has no `@updatedAt`, and the database's `ON UPDATE CURRENT_TIMESTAMP` only fires when another column actually changes. Never rely on the database to set it.
+- Database sessions run in UTC (`timezone=Z` in `src/config/prisma.js`). Do not remove it: the adapter reads and writes `TIMESTAMP` values as UTC strings.
+- If the contract or a security rule is unclear or missing, ask before deciding.
+- When finished, list the manual tests to run (with example requests) and any env variables added to `.env.example`.

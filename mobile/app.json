@@ -1,0 +1,33 @@
+{
+  "expo": {
+    "name": "Project Management System",
+    "slug": "project-management-system",
+    "version": "1.0.0",
+    "scheme": "pms",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "platforms": ["android", "ios"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.diyashrestha.projectmanagement"
+    },
+    "android": {
+      "package": "com.diyashrestha.projectmanagement",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "backgroundColor": "#EEF2FF",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      }
+    },
+    "plugins": [
+      "expo-router",
+      "expo-status-bar",
+      "expo-secure-store",
+      "@react-native-community/datetimepicker",
+      "expo-font"
+    ]
+  }
+}

@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+
+# Build output
+dist/
+build/
+.expo/
+*.apk
+*.aab
+
+# Certificates and signing keys
+*.pem
+*.jks
+*.keystore
+
+# Archives (docs.zip duplicates docs/)
+docs.zip
+__MACOSX/
+
+# OS files
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Prisma
+prisma/*.db

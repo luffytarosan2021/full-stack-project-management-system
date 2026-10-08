@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model projects {
+  id          String          @id @db.Char(36)
+  user_id     String          @db.Char(36)
+  name        String          @db.VarChar(150)
+  description String?         @db.Text
+  status      projects_status @default(NOT_STARTED)
+  start_date  DateTime        @db.Date
+  end_date    DateTime        @db.Date
+  created_at  DateTime        @default(now()) @db.Timestamp(0)
+  updated_at  DateTime        @default(now()) @db.Timestamp(0)
+  users       users           @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_projects_user")
+  tasks       tasks[]
+
+  @@index([user_id], map: "idx_projects_user_id")
+}
+
+model tasks {
+  id          String         @id @db.Char(36)
+  project_id  String         @db.Char(36)
+  name        String         @db.VarChar(150)
+  description String?        @db.Text
+  priority    tasks_priority @default(MEDIUM)
+  status      tasks_status   @default(PENDING)
+  due_date    DateTime       @db.Date
+  created_at  DateTime       @default(now()) @db.Timestamp(0)
+  updated_at  DateTime       @default(now()) @db.Timestamp(0)
+  projects    projects       @relation(fields: [project_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_tasks_project")
+
+  @@index([project_id], map: "idx_tasks_project_id")
+}
+
+model users {
+  id            String     @id @db.Char(36)
+  full_name     String     @db.VarChar(100)
+  email         String     @unique(map: "email") @db.VarChar(255)
+  password_hash String     @db.VarChar(255)
+  created_at    DateTime   @default(now()) @db.Timestamp(0)
+  updated_at    DateTime   @default(now()) @db.Timestamp(0)
+  projects      projects[]
+}
+
+enum projects_status {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum tasks_priority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum tasks_status {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+}
