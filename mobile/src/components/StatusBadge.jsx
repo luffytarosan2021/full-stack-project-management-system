@@ -4,7 +4,7 @@ import { Badge } from "./Badge";
 const STATUSES = {
   NOT_STARTED: { label: "Not Started", tone: "neutral" },
   PENDING: { label: "Pending", tone: "neutral" },
-  IN_PROGRESS: { label: "In Progress", tone: "blue" },
+  IN_PROGRESS: { label: "In Progress", tone: "primary" },
   COMPLETED: { label: "Completed", tone: "green" },
 };
 

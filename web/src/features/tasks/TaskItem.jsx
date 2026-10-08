@@ -1,5 +1,4 @@
 import { Ellipsis, Pencil, Trash2 } from "lucide-react";
-import { Link } from "react-router";
 import { PriorityBadge } from "@/components/PriorityBadge";
 import { StatusBadge } from "@/components/StatusBadge";
 import { Button } from "@/components/ui/button";
@@ -9,10 +8,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { formatTimestamp } from "@/lib/dates.js";
+import { formatDate } from "@/lib/dates.js";
 import { cn } from "@/lib/utils";
 import { TaskDueDate } from "./TaskDueDate";
-import { taskPath } from "./taskOptions.js";
 import { useToggleTaskCompleted } from "./useToggleTaskCompleted.js";
 
 function TaskActions({ task, onEdit, onDelete }) {
@@ -20,7 +18,7 @@ function TaskActions({ task, onEdit, onDelete }) {
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon-sm" className="-my-1 shrink-0" aria-label={`Actions for ${task.name}`}>
+        <Button variant="ghost" size="icon-sm" className="shrink-0" aria-label={`Actions for ${task.name}`}>
           <Ellipsis aria-hidden="true" />
         </Button>
       </DropdownMenuTrigger>
@@ -38,46 +36,70 @@ function TaskActions({ task, onEdit, onDelete }) {
   );
 }
 
-// docs/DESIGN.md TaskItem: checkbox (mark complete), name, priority, status, due date, overflow actions.
+/**
+ * Task row — matches the Stitch screenshot table layout.
+ * Columns: checkbox | name+desc | priority | status | due date | actions
+ * On narrow screens columns collapse gracefully.
+ */
 export function TaskItem({ task, onEdit, onDelete }) {
   const { completed, toggle, pending } = useToggleTaskCompleted(task);
 
   return (
-    <li className="flex items-start gap-3 px-4 py-4 sm:px-5">
-      <label className="-m-2 flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-md hover:bg-muted has-disabled:cursor-wait">
+    <li className={cn("task-row grid items-center gap-x-4 px-4 py-3.5 sm:px-5", "grid-cols-[auto_1fr_auto]")}>
+      {/* Checkbox */}
+      <label className="-m-1 flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-md hover:bg-muted has-disabled:cursor-wait">
         <input
           type="checkbox"
           checked={completed}
           onChange={toggle}
           disabled={pending}
           aria-label={completed ? `Mark ${task.name} as pending` : `Mark ${task.name} as completed`}
-          className="size-4 cursor-pointer accent-primary disabled:cursor-wait"
+          className="size-4 cursor-pointer rounded accent-primary disabled:cursor-wait"
         />
       </label>
-      <div className="grid min-w-0 flex-1 grid-cols-1 gap-2">
-        <div className="flex items-start justify-between gap-3">
-          <h3 className="min-w-0 truncate text-sm font-medium" title={task.name}>
-            <Link
-              to={taskPath(task)}
-              className={cn(
-                "rounded-sm hover:underline focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none",
-                completed && "text-muted-foreground line-through",
-              )}
-            >
-              {task.name}
-            </Link>
-          </h3>
-          <TaskActions task={task} onEdit={onEdit} onDelete={onDelete} />
-        </div>
+
+      {/* Name + description */}
+      <div className="min-w-0">
+        <p
+          className={cn(
+            "truncate text-sm font-medium",
+            completed && "text-muted-foreground line-through",
+          )}
+          title={task.name}
+        >
+          {task.name}
+        </p>
         {task.description ? (
-          <p className="line-clamp-1 text-sm wrap-anywhere text-muted-foreground">{task.description}</p>
+          <p className="truncate text-xs text-muted-foreground mt-0.5">{task.description}</p>
         ) : null}
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+      </div>
+
+      {/* Right-side meta (visible md+) + actions */}
+      <div className="flex items-center gap-3 shrink-0">
+        {/* Priority badge — hidden on mobile */}
+        <div className="hidden md:block">
           <PriorityBadge priority={task.priority} />
-          <StatusBadge status={task.status} />
-          <TaskDueDate task={task} prefix="Due " />
-          <span className="text-xs text-muted-foreground">Created {formatTimestamp(task.createdAt)}</span>
         </div>
+
+        {/* Status badge — hidden on mobile */}
+        <div className="hidden md:block">
+          <StatusBadge status={task.status} />
+        </div>
+
+        {/* Due date — hidden on small screens */}
+        <div className="hidden sm:block w-28">
+          <TaskDueDate task={task} />
+        </div>
+
+        {/* Actions menu */}
+        <TaskActions task={task} onEdit={onEdit} onDelete={onDelete} />
+      </div>
+
+      {/* Mobile-only: badges + due date on second line */}
+      <div className="col-start-2 flex flex-wrap items-center gap-x-2 gap-y-1.5 pt-1.5 sm:hidden">
+        <PriorityBadge priority={task.priority} />
+        <StatusBadge status={task.status} />
+        <TaskDueDate task={task} />
       </div>
     </li>
   );
@@ -85,12 +107,17 @@ export function TaskItem({ task, onEdit, onDelete }) {
 
 export function TaskItemSkeleton() {
   return (
-    <li className="flex items-start gap-3 px-4 py-4 sm:px-5" aria-hidden="true">
-      <div className="size-5 animate-pulse rounded bg-muted" />
-      <div className="grid flex-1 gap-2">
+    <li className="grid grid-cols-[auto_1fr_auto] items-center gap-x-4 px-4 py-3.5 sm:px-5" aria-hidden="true">
+      <div className="size-4 animate-pulse rounded bg-muted" />
+      <div className="grid gap-1.5">
         <div className="h-4 w-1/2 animate-pulse rounded bg-muted" />
-        <div className="h-4 w-3/4 animate-pulse rounded bg-muted" />
-        <div className="h-5 w-2/3 animate-pulse rounded bg-muted" />
+        <div className="h-3 w-3/4 animate-pulse rounded bg-muted" />
+      </div>
+      <div className="flex items-center gap-3">
+        <div className="hidden md:block h-5 w-16 animate-pulse rounded-full bg-muted" />
+        <div className="hidden md:block h-5 w-20 animate-pulse rounded-full bg-muted" />
+        <div className="hidden sm:block h-4 w-24 animate-pulse rounded bg-muted" />
+        <div className="size-7 animate-pulse rounded bg-muted" />
       </div>
     </li>
   );

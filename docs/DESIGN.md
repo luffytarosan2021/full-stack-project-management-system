@@ -20,45 +20,47 @@ Related: `docs/API.md` (data and messages), `docs/VALIDATION.md` (form limits).
 
 | Token | Hex | Use |
 |---|---|---|
-| `primary` | `#4F46E5` | Buttons, links, active nav, focus rings |
-| `primary-hover` | `#4338CA` | Hover and pressed |
-| `primary-soft` | `#EEF2FF` | Selected rows, soft backgrounds |
-| `bg` | `#F8FAFC` | Page background |
+| `primary` | `#2D6A4F` | Buttons, links, active nav, focus rings (sage/forest green) |
+| `primary-hover` | `#235C42` | Hover and pressed |
+| `primary-soft` | `#E8F4EE` | Selected rows, soft backgrounds |
+| `bg` | `#F5F5F0` | Page background (warm off-white) |
 | `surface` | `#FFFFFF` | Cards, inputs, modals |
-| `border` | `#E2E8F0` | Card and input borders |
-| `text` | `#0F172A` | Main text |
-| `text-muted` | `#64748B` | Secondary text, placeholders |
+| `border` | `#E5E4DE` | Card and input borders |
+| `text` | `#1C1C1A` | Main text (charcoal) |
+| `text-muted` | `#6B7280` | Secondary text, placeholders |
 | `danger` | `#DC2626` | Errors, delete actions |
 | `danger-soft` | `#FEF2F2` | Error banners |
 | `success` | `#16A34A` | Success toasts |
+| `sidebar` | `#1C2B22` | Dark forest green sidebar background |
+| `sidebar-foreground` | `#E8F0EA` | Sidebar text |
 
 ### Project status badges
 
-| Status | Label | Text | Background |
-|---|---|---|---|
-| `NOT_STARTED` | Not Started | `#475569` | `#F1F5F9` |
-| `IN_PROGRESS` | In Progress | `#1D4ED8` | `#DBEAFE` |
-| `COMPLETED` | Completed | `#15803D` | `#DCFCE7` |
+| Status | Label | Text | Background | Dot |
+|---|---|---|---|---|
+| `NOT_STARTED` | Not Started | `#475569` | `#F1F5F9` | `#94A3B8` |
+| `IN_PROGRESS` | In Progress | `#2D6A4F` | `#E8F4EE` | `#2D6A4F` |
+| `COMPLETED` | Completed | `#15803D` | `#DCFCE7` | `#15803D` |
 
 ### Task status badges
 
-| Status | Label | Text | Background |
-|---|---|---|---|
-| `PENDING` | Pending | `#475569` | `#F1F5F9` |
-| `IN_PROGRESS` | In Progress | `#1D4ED8` | `#DBEAFE` |
-| `COMPLETED` | Completed | `#15803D` | `#DCFCE7` |
+| Status | Label | Text | Background | Dot |
+|---|---|---|---|---|
+| `PENDING` | Pending | `#475569` | `#F1F5F9` | `#94A3B8` |
+| `IN_PROGRESS` | In Progress | `#2D6A4F` | `#E8F4EE` | `#2D6A4F` |
+| `COMPLETED` | Completed | `#15803D` | `#DCFCE7` | `#15803D` |
 
 ### Priority badges
 
-| Priority | Label | Text | Background |
-|---|---|---|---|
-| `LOW` | Low | `#475569` | `#F1F5F9` |
-| `MEDIUM` | Medium | `#B45309` | `#FEF3C7` |
-| `HIGH` | High | `#B91C1C` | `#FEE2E2` |
+| Priority | Label | Text | Background | Dot |
+|---|---|---|---|---|
+| `LOW` | Low | `#475569` | `#F1F5F9` | `#94A3B8` |
+| `MEDIUM` | Medium | `#B45309` | `#FEF3C7` | `#B45309` |
+| `HIGH` | High | `#B91C1C` | `#FEE2E2` | `#B91C1C` |
 
 ### Typography
 - Font: **Inter** (web via Google Fonts; mobile via `@expo-google-fonts/inter`), with system font fallback.
-- Sizes: page title 24 (semibold), section title 18 (semibold), body 14 to 16, caption 12.
+- Sizes: page title 30 (semibold, tight tracking), section title 18 (semibold), body 14 to 16, caption 12.
 
 ### Shape and spacing
 - Border radius: 8 for inputs and buttons, 12 for cards and modals, 999 for badges.

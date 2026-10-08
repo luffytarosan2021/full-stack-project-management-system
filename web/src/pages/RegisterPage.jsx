@@ -6,7 +6,6 @@ import { Link } from "react-router";
 import { FormAlert } from "@/components/FormAlert";
 import { FormField } from "@/components/FormField";
 import { SubmitButton } from "@/components/SubmitButton";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader } from "@/components/ui/card";
 import { authApi } from "@/features/auth/authApi.js";
 import { useAuth } from "@/features/auth/authContext.js";
 import { registerSchema } from "@/features/auth/authSchemas.js";
@@ -40,50 +39,57 @@ export function RegisterPage() {
   });
 
   return (
-    <Card>
-      <CardHeader>
-        <h1 className="text-2xl font-semibold">Create an account</h1>
-        <CardDescription>Create an account to manage your projects and tasks.</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={onSubmit} noValidate className="grid gap-4">
-          <FormAlert>{formError}</FormAlert>
-          <FormField
-            label="Full name"
-            autoComplete="name"
-            maxLength={100}
-            error={errors.fullName?.message}
-            {...register("fullName")}
-          />
-          <FormField
-            label="Email"
-            type="email"
-            autoComplete="email"
-            maxLength={255}
-            error={errors.email?.message}
-            {...register("email")}
-          />
-          <FormField
-            label="Password"
-            type="password"
-            autoComplete="new-password"
-            hint="At least 8 characters."
-            error={errors.password?.message}
-            {...register("password")}
-          />
-          <SubmitButton pending={createAccount.isPending} pendingLabel="Creating account…">
-            Create account
-          </SubmitButton>
-        </form>
-      </CardContent>
-      <CardFooter className="justify-center text-sm text-muted-foreground">
-        <span>
-          Already have an account?{" "}
-          <Link to="/login" className="font-medium text-primary hover:text-primary-hover hover:underline">
-            Log in
-          </Link>
-        </span>
-      </CardFooter>
-    </Card>
+    <div className="grid gap-6">
+      <div className="grid gap-1.5">
+        <h1 className="text-2xl font-semibold text-foreground">Create your account</h1>
+        <p className="text-sm text-muted-foreground">
+          Start planning projects and finishing tasks today.
+        </p>
+      </div>
+
+      <form onSubmit={onSubmit} noValidate className="grid gap-5">
+        <FormAlert>{formError}</FormAlert>
+        <FormField
+          variant="auth"
+          label="Full Name"
+          autoComplete="name"
+          maxLength={100}
+          placeholder="Jane Smith"
+          error={errors.fullName?.message}
+          {...register("fullName")}
+        />
+        <FormField
+          variant="auth"
+          label="Email address"
+          type="email"
+          autoComplete="email"
+          maxLength={255}
+          placeholder="you@example.com"
+          error={errors.email?.message}
+          {...register("email")}
+        />
+        <FormField
+          variant="auth"
+          label="Password"
+          type="password"
+          autoComplete="new-password"
+          placeholder="••••••••"
+          hint="At least 8 characters."
+          error={errors.password?.message}
+          {...register("password")}
+        />
+
+        <SubmitButton pending={createAccount.isPending} pendingLabel="Creating account…" className="mt-1 h-11 w-full rounded-full text-sm font-medium">
+          Create Account
+        </SubmitButton>
+      </form>
+
+      <p className="text-center text-sm text-muted-foreground">
+        Already have an account?{" "}
+        <Link to="/login" className="font-semibold text-foreground underline-offset-4 hover:underline">
+          Sign In
+        </Link>
+      </p>
+    </div>
   );
 }

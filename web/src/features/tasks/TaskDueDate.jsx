@@ -1,4 +1,4 @@
-import { CalendarDays } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
 import { formatDate } from "@/lib/dates.js";
 import { cn } from "@/lib/utils";
 import { isOverdue } from "./taskOptions.js";
@@ -10,14 +10,21 @@ export function TaskDueDate({ task, prefix = "" }) {
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 text-sm whitespace-nowrap",
+        "inline-flex items-center gap-1 text-xs whitespace-nowrap",
         overdue ? "font-medium text-destructive" : "text-muted-foreground",
       )}
     >
-      <CalendarDays className="size-4 shrink-0" aria-hidden="true" />
-      {prefix}
-      {formatDate(task.dueDate)}
-      {overdue ? <span>· Overdue</span> : null}
+      {overdue ? (
+        <>
+          <AlertTriangle className="size-3.5 shrink-0" aria-hidden="true" />
+          {prefix}{formatDate(task.dueDate)}{" "}
+          <span className="font-medium">(Overdue)</span>
+        </>
+      ) : (
+        <>
+          {prefix}{formatDate(task.dueDate)}
+        </>
+      )}
     </span>
   );
 }

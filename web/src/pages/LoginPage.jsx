@@ -6,7 +6,6 @@ import { Link } from "react-router";
 import { FormAlert } from "@/components/FormAlert";
 import { FormField } from "@/components/FormField";
 import { SubmitButton } from "@/components/SubmitButton";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader } from "@/components/ui/card";
 import { authApi } from "@/features/auth/authApi.js";
 import { useAuth } from "@/features/auth/authContext.js";
 import { loginSchema } from "@/features/auth/authSchemas.js";
@@ -43,42 +42,48 @@ export function LoginPage() {
   });
 
   return (
-    <Card>
-      <CardHeader>
-        <h1 className="text-2xl font-semibold">Log in</h1>
-        <CardDescription>Enter your email and password to continue.</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={onSubmit} noValidate className="grid gap-4">
-          <FormAlert tone="info">{formError ? null : visibleNotice}</FormAlert>
-          <FormAlert>{formError}</FormAlert>
+    <div className="grid gap-6">
+      <div className="grid gap-1">
+        <h1 className="text-2xl font-semibold text-foreground">Welcome back to HamroProject</h1>
+      </div>
+
+      <form onSubmit={onSubmit} noValidate className="grid gap-5">
+        <FormAlert tone="info">{formError ? null : visibleNotice}</FormAlert>
+        <FormAlert>{formError}</FormAlert>
+
+        <FormField
+          variant="auth"
+          label="Username or Email"
+          type="email"
+          autoComplete="email"
+          placeholder="you@example.com"
+          error={errors.email?.message}
+          {...register("email")}
+        />
+        <div className="grid gap-1">
           <FormField
-            label="Email"
-            type="email"
-            autoComplete="email"
-            error={errors.email?.message}
-            {...register("email")}
-          />
-          <FormField
+            variant="auth"
             label="Password"
             type="password"
             autoComplete="current-password"
+            placeholder="••••••••"
             error={errors.password?.message}
             {...register("password")}
           />
-          <SubmitButton pending={login.isPending} pendingLabel="Logging in…">
-            Log in
-          </SubmitButton>
-        </form>
-      </CardContent>
-      <CardFooter className="justify-center text-sm text-muted-foreground">
-        <span>
-          Don&apos;t have an account?{" "}
-          <Link to="/register" className="font-medium text-primary hover:text-primary-hover hover:underline">
-            Create one
-          </Link>
-        </span>
-      </CardFooter>
-    </Card>
+          {/* Forgot password is not supported by the API — omit the feature */}
+        </div>
+
+        <SubmitButton pending={login.isPending} pendingLabel="Signing in…" className="mt-1 h-11 w-full rounded-full text-sm font-medium">
+          Sign In
+        </SubmitButton>
+      </form>
+
+      <p className="text-center text-sm text-muted-foreground">
+        New to HamroProject?{" "}
+        <Link to="/register" className="font-semibold text-foreground underline-offset-4 hover:underline">
+          Create Account
+        </Link>
+      </p>
+    </div>
   );
 }

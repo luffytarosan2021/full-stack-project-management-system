@@ -1,13 +1,16 @@
 {
   "expo": {
-    "name": "Project Management System",
+    "name": "HamroProject",
     "slug": "project-management-system",
     "version": "1.0.0",
     "scheme": "pms",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "platforms": ["android", "ios"],
+    "platforms": [
+      "android",
+      "ios"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.diyashrestha.projectmanagement"
@@ -28,6 +31,12 @@
       "expo-secure-store",
       "@react-native-community/datetimepicker",
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "0316aaf5-043f-432b-8977-2e227143d8bd"
+      }
+    }
   }
 }

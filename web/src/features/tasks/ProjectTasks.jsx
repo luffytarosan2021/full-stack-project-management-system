@@ -12,15 +12,34 @@ import { TaskItem, TaskItemSkeleton } from "./TaskItem";
 import { TASK_PRIORITIES, TASK_PRIORITY_VALUES, TASK_STATUSES, TASK_STATUS_VALUES } from "./taskOptions.js";
 import { useTasks } from "./taskQueries.js";
 
-const LIST = "divide-y rounded-xl border bg-card";
-const FILTER = "w-full md:w-44";
+const TABLE = "divide-y rounded-xl border bg-card overflow-hidden";
 
 function AddTaskButton({ onClick }) {
   return (
-    <Button size="lg" className="px-4" onClick={onClick}>
-      <Plus aria-hidden="true" />
+    <Button size="default" className="gap-2 px-4 shrink-0" onClick={onClick}>
+      <Plus className="size-4" aria-hidden="true" />
       Add Task
     </Button>
+  );
+}
+
+// Column header row visible on md+
+function TableHeader() {
+  return (
+    <div
+      className="hidden md:grid items-center gap-x-4 px-5 py-2.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground bg-muted/40"
+      style={{ gridTemplateColumns: "auto 1fr auto" }}
+      aria-hidden="true"
+    >
+      <div className="size-4" />
+      <span>Task Name</span>
+      <div className="flex items-center gap-3 shrink-0">
+        <span className="w-16">Priority</span>
+        <span className="w-20">Status</span>
+        <span className="w-28">Due Date</span>
+        <span className="size-7" />
+      </div>
+    </div>
   );
 }
 
@@ -31,11 +50,14 @@ function TaskList({ filters, hasFilters, onClearFilters, onCreate, onEdit, onDel
   if (error) return <ErrorState message={error.message} onRetry={() => refetch()} retrying={isFetching} />;
   if (!data) {
     return (
-      <ul role="status" aria-label="Loading tasks" className={LIST}>
-        <TaskItemSkeleton />
-        <TaskItemSkeleton />
-        <TaskItemSkeleton />
-      </ul>
+      <div className={TABLE}>
+        <TableHeader />
+        <ul role="status" aria-label="Loading tasks">
+          <TaskItemSkeleton />
+          <TaskItemSkeleton />
+          <TaskItemSkeleton />
+        </ul>
+      </div>
     );
   }
 
@@ -46,7 +68,7 @@ function TaskList({ filters, hasFilters, onClearFilters, onCreate, onEdit, onDel
         title="No tasks found"
         message="Try a different search or filter."
         action={
-          <Button variant="outline" size="lg" className="px-4" onClick={onClearFilters}>
+          <Button variant="outline" size="default" className="gap-1.5" onClick={onClearFilters}>
             Clear filters
           </Button>
         }
@@ -62,15 +84,18 @@ function TaskList({ filters, hasFilters, onClearFilters, onCreate, onEdit, onDel
   }
 
   return (
-    <ul className={LIST} aria-label="Tasks" aria-busy={isPlaceholderData}>
-      {data.items.map((task) => (
-        <TaskItem key={task.id} task={task} onEdit={onEdit} onDelete={onDelete} />
-      ))}
-    </ul>
+    <div className={TABLE}>
+      <TableHeader />
+      <ul aria-label="Tasks" aria-busy={isPlaceholderData}>
+        {data.items.map((task) => (
+          <TaskItem key={task.id} task={task} onEdit={onEdit} onDelete={onDelete} />
+        ))}
+      </ul>
+    </div>
   );
 }
 
-// Task toolbar and list on Project Details (docs/DESIGN.md section 5, route /projects/:id).
+// Task toolbar and list on Project Details (docs/DESIGN.md section 5, route /projects/:id)
 export function ProjectTasks({ projectId }) {
   const { search, getEnum, updateFilters } = useFilterParams();
   const status = getEnum("status", TASK_STATUS_VALUES);
@@ -107,35 +132,35 @@ export function ProjectTasks({ projectId }) {
 
   return (
     <section aria-labelledby="tasks-heading" className="grid gap-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 id="tasks-heading" className="text-lg font-semibold">
-          Tasks
-        </h2>
+      {/* Toolbar */}
+      <div className="flex flex-wrap items-center gap-3">
+        <SearchInput
+          value={search}
+          onSearch={handleSearch}
+          label="Search tasks"
+          placeholder="Search tasks…"
+          className="flex-1 min-w-40"
+        />
+        <FilterSelect
+          label="Filter by status"
+          allLabel="Status: All"
+          value={status}
+          options={TASK_STATUSES}
+          onChange={(value) => updateFilters({ status: value })}
+          className="w-36"
+        />
+        <FilterSelect
+          label="Filter by priority"
+          allLabel="Priority: All"
+          value={priority}
+          options={TASK_PRIORITIES}
+          onChange={(value) => updateFilters({ priority: value })}
+          className="w-36"
+        />
         <AddTaskButton onClick={openCreate} />
       </div>
 
-      <div role="search" className="flex flex-col gap-3 md:flex-row">
-        <SearchInput value={search} onSearch={handleSearch} label="Search tasks" placeholder="Search tasks" />
-        <div className="grid grid-cols-2 gap-3 md:flex md:shrink-0">
-          <FilterSelect
-            label="Filter by status"
-            allLabel="All statuses"
-            value={status}
-            options={TASK_STATUSES}
-            onChange={(value) => updateFilters({ status: value })}
-            className={FILTER}
-          />
-          <FilterSelect
-            label="Filter by priority"
-            allLabel="All priorities"
-            value={priority}
-            options={TASK_PRIORITIES}
-            onChange={(value) => updateFilters({ priority: value })}
-            className={FILTER}
-          />
-        </div>
-      </div>
-
+      {/* Task list */}
       <TaskList
         filters={{ projectId, search, status, priority }}
         hasFilters={hasFilters}
